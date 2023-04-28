@@ -16,7 +16,8 @@
     "mongoose": "^5.11.11",
     "request": "^2.88.2",
     "socket.io": "^3.0.5",
-    "socket.io-client": "^3.0.5"
+    "socket.io-client": "^3.0.5",
+    "nodemon": "^2.0.22"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
