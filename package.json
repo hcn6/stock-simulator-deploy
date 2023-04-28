@@ -4,7 +4,7 @@
   "description": "backend for stock app",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "node index.js"
   },
   "author": "\"Hieu Nguyen\"",
   "license": "ISC",
