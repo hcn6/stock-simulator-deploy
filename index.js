@@ -1,5 +1,5 @@
 const express = require('express');
-const port = 8080;
+const port = process.env.PORT || 8080
 const bodyParser = require('body-parser');
 const app = express();
 const MongoClient = require('mongodb').MongoClient;
@@ -12,7 +12,7 @@ const cors = require('cors');
 app.use(bodyParser.json());
 app.use(cors())
 const server = app.listen(port, () => {
-    console.log("Server is listening on port 8080")
+    console.log(`Server is listening on port ${port}`)
 })
 const io = require('socket.io')(server, {
     cors: {
