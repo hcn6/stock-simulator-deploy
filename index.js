@@ -11,6 +11,7 @@ const cors = require('cors');
 // mongoose.connect('mongodb://localhost:27017/', { useNewUrlParser: true, useUnifiedTopology: true });
 app.use(bodyParser.json());
 app.use(cors())
+console.log("PORT " + process.env.PORT)
 const server = app.listen(port, () => {
     console.log(`Server is listening on port ${port}`)
 })
