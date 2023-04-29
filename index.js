@@ -35,12 +35,12 @@ const server = app.listen(port, () => {
 //     })
 // })
 const dbConnection = require('./db');
-const db = dbConnection.connect();
+dbConnection.connect();
 
 
-app.post('/searchTransaction', (req, res) => {
+app.post('/searchTransaction', async (req, res) => {
     const data = req.body;
-    // const db = client.db('StockApp');
+    const db = await dbConnection.getDb();
     db.collection('Transactions').findOne({ "Stock Name": data['Stock Name'] })
         .then((result) => {
             res.status(200)
@@ -50,14 +50,8 @@ app.post('/searchTransaction', (req, res) => {
         })
 })
 
-app.get('/allStockPrice', (req, res) => {
-    // const data = {};
-    // const db = client.db("StockApp");
-    // const cursor = db.collection("StockPrice").find();
-    // await cursor.forEach((doc) => {
-    //     data[doc['stock']] = doc['fields']['price']
-    // })
-    // res.send(data)
+app.get('/allStockPrice', async (req, res) => {
+    const db = await dbConnection.getDb();
     db.collection("StockPrice").find().toArray((err, results) => {
         let stockMap = {}
         results.forEach((stock, i) => {
@@ -67,14 +61,16 @@ app.get('/allStockPrice', (req, res) => {
     })
 })
 
-app.get('/allTransactions', (req, res) => {
+app.get('/allTransactions', async (req, res) => {
+    const db = await dbConnection.getDb();
     // const db = client.db('StockApp');
     db.collection("Transactions").find().toArray((err, results) => {
         res.send(results)
     })
 })
 
-app.post('/addTransaction', (req, res) => {
+app.post('/addTransaction', async (req, res) => {
+    const db = await dbConnection.getDb();
     const data = req.body;
     db.collection('Transactions').findOne({ "Stock Name": data['Stock Name'] })
         .then((output) => {
@@ -111,7 +107,8 @@ app.post('/addTransaction', (req, res) => {
         })
 })
 
-app.get('/currentPrice', (req, res) => {
+app.get('/currentPrice',async (req, res) => {
+    const db = await dbConnection.getDb();
     db.collection("StockPrice").find().toArray((err, results) => {
         if (err) {
             throw err;
@@ -120,7 +117,8 @@ app.get('/currentPrice', (req, res) => {
     })
 })
 
-app.post("/sellTransaction", (req, res) => {
+app.post("/sellTransaction", async (req, res) => {
+    const db = await dbConnection.getDb();
     const data = req.body;
     db.collection("Transactions").findOne({ "Stock Name": data["Stock Name"] })
         .then((output) => {
@@ -133,7 +131,8 @@ app.post("/sellTransaction", (req, res) => {
         })
 })
 
-app.get("/allDeposit", (req, res) => {
+app.get("/allDeposit", async (req, res) => {
+    const db = await dbConnection.getDb();
     db.collection("Deposit").find().toArray((err, result) => {
         if (err) {
             throw err;
@@ -142,7 +141,8 @@ app.get("/allDeposit", (req, res) => {
     })
 })
 
-app.post("/addDeposit", (req, res) => {
+app.post("/addDeposit", async (req, res) => {
+    const db = await dbConnection.getDb();
     const data = req.body;
     mongoIO.depositMoney(db, () => {
         res.status(200)
@@ -152,13 +152,15 @@ app.post("/addDeposit", (req, res) => {
     }, data)
 })
 
-app.get('/mostRecentDeposit', (req, res) => {
+app.get('/mostRecentDeposit', async (req, res) => {
+    const db = await dbConnection.getDb();
     db.collection("Deposit").find().sort({ date: -1 }).limit(1).toArray((err, result) => {
         res.send(result)
     })
 })
 
-app.post('/buyPower', (req, res) => {
+app.post('/buyPower', async (req, res) => {
+    const db = await dbConnection.getDb();
     const data = req.body;
     mongoIO.buyPower(db, () => {
         res.status(200)
@@ -168,13 +170,15 @@ app.post('/buyPower', (req, res) => {
     }, data)
 })
 
-app.get('/mostRecentBuyPower', (req, res) => {
+app.get('/mostRecentBuyPower', async (req, res) => {
+    const db = await dbConnection.getDb();
     db.collection("BuyPower").find().sort({ date: -1 }).limit(1).toArray((err, result) => {
         res.send(result)
     })
 })
 
-app.post("/tradeHistory", (req, res) => {
+app.post("/tradeHistory", async (req, res) => {
+    const db = await dbConnection.getDb();
     const data = req.body;
     mongoIO.tradeHistory(db, () => {
         res.status(200)
@@ -184,11 +188,13 @@ app.post("/tradeHistory", (req, res) => {
     }, data)
 })
 
-app.get("/allTradeHistory", (req, res) => {
+app.get("/allTradeHistory", async (req, res) => {
+    const db = await dbConnection.getDb();
     mongoIO.getAllTradeHistory(db, res);
 })
 
-app.post("/addInvesting", (req, res) => {
+app.post("/addInvesting", async (req, res) => {
+    const db = await dbConnection.getDb();
     const data = req.body;
     mongoIO.addInvesting(db, () => {
         res.status(200)
@@ -196,10 +202,12 @@ app.post("/addInvesting", (req, res) => {
     }, data);
 })
 
-app.get("/allInvesting", (req, res) => {
+app.get("/allInvesting", async (req, res) => {
+    const db = await dbConnection.getDb();
     mongoIO.getAllInvesting(db, res);
 })
 
-app.delete("/reset", (req, res) => {
+app.delete("/reset", async (req, res) => {
+    const db = await dbConnection.getDb();
     mongoIO.resetEverything(db, res);
 })

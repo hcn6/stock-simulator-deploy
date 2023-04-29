@@ -4,15 +4,18 @@ const client = new MongoClient(url, { useNewUrlParser: true });
 
 let db;
 async function connect() {
-  try {
-    await client.connect();
-    db = client.db('StockApp');
-    console.log('Connected to MongoDB');
-    return db;
-  } catch (error) {
-    console.error(error);
-  }
+    try {
+        await client.connect();
+        db = client.db('StockApp');
+        console.log('Connected to MongoDB');
+    } catch (error) {
+        console.error(error);
+    }
 }
 
-// exports.getDb = getDb;
+function getDb() {
+    return db;
+}
+
+exports.getDb = getDb;
 exports.connect = connect;
