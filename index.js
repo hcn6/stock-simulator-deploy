@@ -4,14 +4,15 @@ const bodyParser = require('body-parser');
 const app = express();
 const MongoClient = require('mongodb').MongoClient;
 const mongoIO = require('./MongoIO');
-const url = process.env.DATABASE_URL || "mongodb://localhost:27017/StockApp"
+const url = process.env.DATABASE_URL || "mongodb://127.0.0.1:27017/StockApp"
 const mongoose = require('mongoose');
 const Transaction = require('./Schema/Transaction')
 const cors = require('cors');
 // mongoose.connect('mongodb://localhost:27017/', { useNewUrlParser: true, useUnifiedTopology: true });
 app.use(bodyParser.json());
 app.use(cors())
-console.log("PORT " + process.env.PORT)
+
+console.log(url)
 const server = app.listen(port, () => {
     console.log(`Server is listening on port ${port}`)
 })
@@ -289,5 +290,15 @@ app.get("/allInvesting", (req, res) => {
         }
         const db = client.db("StockApp");
         mongoIO.getAllInvesting(db, res);
+    })
+})
+
+app.delete("/reset", (req, res) => {
+    MongoClient.connect(url, async (err, client) => {
+        if (err) {
+            console.log(err);
+        }
+        const db = client.db("StockApp");
+        mongoIO.resetEverything(db, res);
     })
 })

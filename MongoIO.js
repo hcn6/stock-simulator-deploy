@@ -136,6 +136,20 @@ const getAllInvesting = async (db, res) => {
             .json(result);
     })
 }
+
+const resetEverything = (db, res) => {
+    db.dropDatabase((err, result) => {
+        if (err) {
+          console.error(err);
+          res.status(500).send('Internal server error');
+          return;
+        }
+    
+        console.log(`Database deleted: ${result}`);
+        res.status(200).send('Reset everything');
+      });
+}
+
 exports.insertTransaction = insertTransaction;
 exports.getAllTransactions = getAllTransactions;
 exports.updateExistedStock = updateExistedStock;
@@ -147,3 +161,4 @@ exports.tradeHistory = tradeHistory;
 exports.getAllTradeHistory = getAllTradeHistory;
 exports.addInvesting = addInvesting;
 exports.getAllInvesting = getAllInvesting;
+exports.resetEverything = resetEverything;
